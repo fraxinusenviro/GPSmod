@@ -61,14 +61,15 @@ function createSpeciesPopup(map, latlng, data = {}) {
     speciesInput.placeholder = 'Species';
     speciesInput.value = data.species || '';
     speciesInput.setAttribute('list', 'species-datalist');
-  
-    //const datalist = document.createElement('datalist');
-    datalist.id = 'species-datalist';
+
+    const datalist = document.getElementById('species-datalist'); // ✅ This was missing
+    datalist.innerHTML = ''; // Optional: clear previous options
     speciesList.forEach(sp => {
-      const opt = document.createElement('option');
-      opt.value = sp;
-      datalist.appendChild(opt);
+    const opt = document.createElement('option');
+    opt.value = sp;
+    datalist.appendChild(opt);
     });
+
   
     const noteInput = document.createElement('textarea');
     noteInput.placeholder = 'Note';
