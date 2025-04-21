@@ -32,7 +32,7 @@ export async function initSpeciesModule(map) {
   
 async function loadSpeciesList() {
   try {
-    const res = await fetch('assets/csv/species_list.csv');
+    const res = await fetch('assets/species_list.csv');
     const text = await res.text();
     speciesList = [];
     speciesCodeMap = {};
