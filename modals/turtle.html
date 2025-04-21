@@ -1,0 +1,23 @@
+<div id="globalModal_turtle" class="modal">
+  <h2>Turtle Survey Metadata</h2>
+  <label>Surveyor: <input type="text" id="SURVEYOR_turtle" /></label>
+  <label>Survey Site: <input type="text" id="SITE_turtle" /></label>
+  <label>Date: <input type="date" id="DATE_turtle" /></label>
+  <div class="btn-row">
+    <button onclick="saveGlobalValues_turtle()">Save</button>
+  </div>
+</div>
+
+<div id="obsModal_turtle" class="modal">
+  <h2>Observation</h2>
+  <select id="obsType_turtle" onchange="showCriteria_turtle()">
+    <option value="">-- Select --</option>
+    <option value="Basking">Basking</option>
+    <option value="Nesting">Nesting</option>
+  </select>
+  <div id="criteriaOptions_turtle"></div>
+  <div class="btn-row">
+    <button onclick="submitPoint_turtle()">Submit</button>
+    <button onclick="closeObsModal_turtle()">Cancel</button>
+  </div>
+</div>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Field Data App</title>
+
+  <!-- Leaflet & FontAwesome styles -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ─────────────────────────────────────────────────────────────────────
+       Title Bar (Top of App with Core Controls)
+  ───────────────────────────────────────────────────────────────────── -->
+  <div class="title-bar">
+    <span class="title-text">Field Data App</span>
+    <div class="title-buttons">
+      
+
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────────────────────
+       Subtitle Bar (Global Variables for New User Points)
+  ───────────────────────────────────────────────────────────────────── -->
+  <div id="subtitleBar" class="subtitle-bar">
+    <label>Type:
+      <select id="typeSelector">
+        <option value="Wetland">Wetland</option>
+        <option value="Watercourse">Watercourse</option>
+        <option value="Wildlife">Wildlife</option>
+        <option value="Other">Other</option>
+      </select>
+    </label>
+
+    <label>Subtype:
+      <select id="subtypeSelector">
+        <option>Loading...</option>
+      </select>
+    </label>
+
+    <label>Description:
+      <input type="text" id="descInput" placeholder="Enter description" />
+    </label>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────────────────────
+       Map + HUD Display
+  ───────────────────────────────────────────────────────────────────── -->
+  <div id="map"></div>
+  <div class="gps-hud" id="gpsHUD">Lat: -- | Lon: -- | UTM: -- | Acc: --</div>
+
+  <!-- ─────────────────────────────────────────────────────────────────────
+       Floating Buttons
+  ───────────────────────────────────────────────────────────────────── -->
+<!-- Horizontal Button Row - Top Right -->
+<div class="top-right-buttons">
+  <button id="basemapToggleBtn" class="floating-btn" title="Switch Basemap">
+    <i class="fas fa-layer-group"></i>
+  </button>
+  <button id="startStopBtn" class="floating-btn" title="Start/Stop Tracking">
+    <i class="fas fa-play"></i>
+  </button>
+  <button id="drawerToggle" class="floating-btn" title="Toggle Drawer">
+    <i class="fas fa-sliders-h"></i>
+  </button>
+</div>
+
+<!-- Vertical Button Column - Top Left -->
+<div class="top-left-buttons">
+  <button id="userPointGPSBtn" class="floating-btn" title="GPS Point">
+    <i class="fas fa-crosshairs"></i>
+  </button>
+  <button id="userPointManualBtn" class="floating-btn" title="Manual Point">
+    <i class="fas fa-map-marker-alt"></i>
+  </button>
+  <button id="dataLibraryBtn" class="floating-btn" title="Point Library">
+    <i class="fas fa-table-list"></i>
+  </button>
+</div>
+
+  <!-- ─────────────────────────────────────────────────────────────────────
+       Side Drawer: Tracking Options
+  ───────────────────────────────────────────────────────────────────── -->
+  <div class="drawer closed" id="trackingDrawer">
+    <h3>GPS Tracker</h3>
+    <label><input type="checkbox" id="enablePoints" checked />Points</label>
+    <label><input type="checkbox" id="enableLine" checked />Line</label>
+    <label><input type="checkbox" id="enablePolygon" />Polygon</label>
+
+    <select id="captureMode">
+      <option value="distance">Min Distance</option>
+      <option value="time">Min Time</option>
+    </select>
+    <input type="number" id="captureParam" value="10" />
+    <input type="text" id="pointLabel" placeholder="Point Label" />
+
+    <button id="exportPoints">Export Points</button>
+    <button id="exportLine">Export Line</button>
+    <button id="exportPolygon">Export Polygon</button>
+
+    <button id="resetStats">Reset Stats</button>
+    <button id="clearAll">Clear All</button>
+
+    <div id="stats">
+      <p>Time: <span id="elapsedTime">0s</span></p>
+      <p>Distance: <span id="totalDistance">0.0</span> m</p>
+      <p>Area: <span id="totalArea">0.0</span> m²</p>
+      <p>Points: <span id="pointCount">0</span></p>
+      <p>Vertices (Line): <span id="lineVertices">0</span></p>
+      <p>Vertices (Polygon): <span id="polygonVertices">0</span></p>
+      <p>Accuracy (min): <span id="minAccuracy">—</span></p>
+      <p>Accuracy (max): <span id="maxAccuracy">—</span></p>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────────────────────────
+       Bottom Drawer: User Points Table + Export Options
+  ───────────────────────────────────────────────────────────────────── -->
+  <div id="userPointsDrawer" class="bottom-drawer hidden">
+    <div class="drawer-header">
+      <button id="closeUserPointsDrawer" title="Close"><i class="fas fa-xmark"></i></button>
+      <h3>User Points</h3>
+
+      <!-- Export Buttons -->
+      <div class="export-buttons">
+        <button id="exportUserCSV" title="Export CSV"><i class="fas fa-file-csv"></i></button>
+        <button id="exportUserGeoJSON" title="Export GeoJSON"><i class="fas fa-file-code"></i></button>
+        <button id="syncUserS3" title="Sync to S3"><i class="fas fa-cloud-upload-alt"></i></button>
+      </div>
+    </div>
+
+    <!-- Table Rendered Dynamically -->
+    <div id="userPointsTableContainer"></div>
+
+    <!-- Console Log Output -->
+    <div id="userConsole" class="console hidden">
+      <div id="userConsoleLog"></div>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────────────────────────
+     Top Drawer: Basemap Selector with Image Icons
+─────────────────────────────────────────────── -->
+<div id="basemapDrawer" class="basemap-drawer">
+  <div class="basemap-option" data-type="esri">
+    <img src="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/6/3" alt="Esri" />
+    <span>Esri</span>
+  </div>
+  <div class="basemap-option" data-type="osm">
+    <img src="https://tile.openstreetmap.org/4/6/3.png" alt="OSM" />
+    <span>OSM</span>
+  </div>
+  <div class="basemap-option" data-type="google">
+    <img src="https://mt1.google.com/vt/lyrs=y&x=6&y=3&z=4" alt="Google" />
+    <span>Google</span>
+  </div>
+  <div class="basemap-option" data-type="topo">
+    <img src="https://a.tile.opentopomap.org/4/6/3.png" alt="Topo" />
+    <span>Topo</span>
+  </div>
+</div>
+  <!-- ─────────────────────────────────────────────────────────────────────
+       JavaScript Modules and Libraries
+  ───────────────────────────────────────────────────────────────────── -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/idb@7/build/iife/index-min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
