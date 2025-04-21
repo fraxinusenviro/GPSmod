@@ -2,12 +2,30 @@
 let speciesList = [], speciesCodeMap = {}, speciesLayer = L.layerGroup();
 
 export async function initSpeciesModule(map) {
-  await loadSpeciesList();
-  map.addLayer(speciesLayer);
-  restoreSavedObservations(map);
-  setupSpeciesButton(map);
-}
-
+    await loadSpeciesList();
+    map.addLayer(speciesLayer);
+    restoreSavedObservations(map);
+  
+    // Wire up floating species button
+    const btn = document.getElementById("speciesObsBtn");
+    if (btn) {
+      btn.onclick = () => {
+        navigator.geolocation.getCurrentPosition(
+          pos => {
+            const latlng = [pos.coords.latitude, pos.coords.longitude];
+            createSpeciesPopup(map, latlng);
+          },
+          err => {
+            alert("Geolocation failed: " + err.message);
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      };
+    } else {
+      console.warn("⚠️ speciesObsBtn not found in DOM");
+    }
+  }
+  
 async function loadSpeciesList() {
   try {
     const res = await fetch('assets/csv/species_list.csv');
