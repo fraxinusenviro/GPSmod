@@ -34,7 +34,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
   };
   currentBasemap = basemaps.esri.addTo(map);
+  console.log("🌱 Calling initSpeciesModule...");
   await initSpeciesModule(map);
+  console.log("✅ Species module initialized");
+  
 
   // ─────────────────────────────────────
   // 3. Top Drawer Basemap Selector
