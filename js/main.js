@@ -5,7 +5,6 @@ import { initTrackingModule } from './modules/tracking.js';
 import { pointuser } from './modules/pointuser.js';
 import { initSpeciesModule } from './modules/species.js';
 
-
 let map, userMarker, accuracyCircle;
 let autoFollow = true;
 let currentBasemap;
@@ -34,10 +33,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
   };
   currentBasemap = basemaps.esri.addTo(map);
-  console.log("🌱 Calling initSpeciesModule...");
-  await initSpeciesModule(map);
-  console.log("✅ Species module initialized");
-  
 
   // ─────────────────────────────────────
   // 3. Top Drawer Basemap Selector
@@ -46,19 +41,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   const drawer = document.getElementById("basemapDrawer");
 
   if (toggleBtn && drawer) {
-    // Toggle drawer on button click
-    toggleBtn.onclick = () => {
-      drawer.classList.toggle("open");
-    };
-
-    // Close drawer on outside click
+    toggleBtn.onclick = () => drawer.classList.toggle("open");
     document.addEventListener("click", (e) => {
       if (!drawer.contains(e.target) && !toggleBtn.contains(e.target)) {
         drawer.classList.remove("open");
       }
     });
-
-    // Switch basemap when option is clicked
     document.querySelectorAll(".basemap-option").forEach(opt => {
       opt.addEventListener("click", () => {
         const selected = opt.dataset.type;
@@ -66,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           if (currentBasemap) map.removeLayer(currentBasemap);
           currentBasemap = basemaps[selected].addTo(map);
         }
-        drawer.classList.remove("open"); // auto-close
+        drawer.classList.remove("open");
       });
     });
   }
@@ -85,11 +73,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupPointTypeInputs();
 
   // ─────────────────────────────────────
-  // 6. Species
+  // 6. Load Species Module (delayed to ensure button is present)
   // ─────────────────────────────────────
-  
-  
-
+  setTimeout(() => {
+    initSpeciesModule(map)
+      .then(() => console.log("✅ Species module initialized (delayed)"))
+      .catch(err => console.error("❌ Failed to initialize species module", err));
+  }, 100);
 
   // ─────────────────────────────────────
   // 7. Start Geolocation Watcher
@@ -223,21 +213,22 @@ function setupPointTypeInputs() {
   if (!typeSelect || !subtypeSelect) return;
 
   async function loadSubtypes(type) {
-  const url = `assets/${type.toLowerCase()}_subtype.csv`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("Failed to fetch subtype CSV");
+    const url = `assets/${type.toLowerCase()}_subtype.csv`;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Failed to fetch subtype CSV");
 
-    const csv = await res.text();
-    const rows = csv.trim().split(/\r?\n/);  // Fix is here
+      const csv = await res.text();
+      const rows = csv.trim().split(/\r?\n/);
 
-    subtypeSelect.innerHTML = rows.map(val =>
-      `<option value="${val}">${val}</option>`).join("");
-  } catch (err) {
-    console.error("Subtype CSV loading failed:", err);
-    subtypeSelect.innerHTML = `<option>Error loading subtypes</option>`;
+      subtypeSelect.innerHTML = rows.map(val =>
+        `<option value="${val}">${val}</option>`).join("");
+    } catch (err) {
+      console.error("Subtype CSV loading failed:", err);
+      subtypeSelect.innerHTML = `<option>Error loading subtypes</option>`;
+    }
   }
-}
+
   typeSelect.addEventListener("change", () => {
     loadSubtypes(typeSelect.value);
   });
