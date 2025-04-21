@@ -15,7 +15,8 @@ export async function initSpeciesModule(map) {
           pos => {
             console.log("✅ Geolocation success");
             const latlng = [pos.coords.latitude, pos.coords.longitude];
-            createSpeciesPopup(map, latlng);
+            //createSpeciesPopup(map, latlng);
+            createSpeciesPopup(map, [45.0, -63.0]);
           },
           err => {
             alert("Geolocation failed: " + err.message);
