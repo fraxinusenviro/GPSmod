@@ -3,6 +3,8 @@
 
 import { initTrackingModule } from './modules/tracking.js';
 import { pointuser } from './modules/pointuser.js';
+import { initSpeciesModule } from './modules/species.js';
+
 
 let map, userMarker, accuracyCircle;
 let autoFollow = true;
@@ -32,6 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
   };
   currentBasemap = basemaps.esri.addTo(map);
+  await initSpeciesModule(map);
 
   // ─────────────────────────────────────
   // 3. Top Drawer Basemap Selector
@@ -79,7 +82,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupPointTypeInputs();
 
   // ─────────────────────────────────────
-  // 6. Start Geolocation Watcher
+  // 6. Species
+  // ─────────────────────────────────────
+  
+  
+
+
+  // ─────────────────────────────────────
+  // 7. Start Geolocation Watcher
   // ─────────────────────────────────────
   if (navigator.geolocation) {
     navigator.geolocation.watchPosition(handleLocationUpdate, console.error, {
