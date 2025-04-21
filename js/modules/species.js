@@ -6,12 +6,14 @@ export async function initSpeciesModule(map) {
     map.addLayer(speciesLayer);
     restoreSavedObservations(map);
   
-    // Wire up floating species button
     const btn = document.getElementById("speciesObsBtn");
     if (btn) {
+      console.log("✅ speciesObsBtn found, wiring click handler");
       btn.onclick = () => {
+        console.log("📍 Species button clicked");
         navigator.geolocation.getCurrentPosition(
           pos => {
+            console.log("✅ Geolocation success");
             const latlng = [pos.coords.latitude, pos.coords.longitude];
             createSpeciesPopup(map, latlng);
           },
@@ -22,9 +24,10 @@ export async function initSpeciesModule(map) {
         );
       };
     } else {
-      console.warn("⚠️ speciesObsBtn not found in DOM");
+      console.warn("❌ speciesObsBtn not found in DOM");
     }
   }
+  
   
 async function loadSpeciesList() {
   try {
