@@ -82,6 +82,7 @@ function createSpeciesPopup(map, latlng, data = {}) {
   
     container.append(speciesInput, datalist, noteInput, saveBtn, deleteBtn);
     marker.bindPopup(container).openPopup();
+    console.log("✅ Popup should now be visible");
   
     saveBtn.onclick = () => {
       const pt = {
