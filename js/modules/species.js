@@ -27,6 +27,64 @@ async function loadSpeciesList() {
   }
 }
 
+function createSpeciesPopup(map, latlng, data = {}) {
+    const marker = L.marker(latlng, { draggable: true }).addTo(speciesLayer);
+    const container = document.createElement('div');
+    container.className = 'custom-popup';
+  
+    const speciesInput = document.createElement('input');
+    speciesInput.placeholder = 'Species';
+    speciesInput.value = data.species || '';
+    speciesInput.setAttribute('list', 'species-datalist');
+  
+    const datalist = document.createElement('datalist');
+    datalist.id = 'species-datalist';
+    speciesList.forEach(sp => {
+      const opt = document.createElement('option');
+      opt.value = sp;
+      datalist.appendChild(opt);
+    });
+  
+    const noteInput = document.createElement('textarea');
+    noteInput.placeholder = 'Note';
+    noteInput.value = data.note || '';
+  
+    const saveBtn = document.createElement('button');
+    saveBtn.textContent = 'Save';
+  
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+  
+    container.append(speciesInput, datalist, noteInput, saveBtn, deleteBtn);
+    marker.bindPopup(container).openPopup();
+  
+    saveBtn.onclick = () => {
+      const pt = {
+        lat: marker.getLatLng().lat,
+        lng: marker.getLatLng().lng,
+        species: speciesInput.value,
+        elcode: speciesCodeMap[speciesInput.value] || '',
+        note: noteInput.value,
+        datetime: new Date().toISOString()
+      };
+      const existing = JSON.parse(localStorage.getItem('speciesPoints') || '[]');
+      existing.push(pt);
+      localStorage.setItem('speciesPoints', JSON.stringify(existing));
+      map.closePopup();
+    };
+  
+    deleteBtn.onclick = () => {
+      const lat = marker.getLatLng().lat;
+      const lng = marker.getLatLng().lng;
+      const updated = JSON.parse(localStorage.getItem('speciesPoints') || '[]').filter(p =>
+        Math.abs(p.lat - lat) > 0.00001 || Math.abs(p.lng - lng) > 0.00001
+      );
+      localStorage.setItem('speciesPoints', JSON.stringify(updated));
+      speciesLayer.removeLayer(marker);
+      map.closePopup();
+    };
+  }
+
 function setupSpeciesButton(map) {
   const btn = L.control({ position: 'topright' });
   btn.onAdd = () => {
@@ -43,63 +101,7 @@ function setupSpeciesButton(map) {
   btn.addTo(map);
 }
 
-function createSpeciesPopup(map, latlng, data = {}) {
-  const marker = L.marker(latlng, { draggable: true }).addTo(speciesLayer);
-  const container = document.createElement('div');
-  container.className = 'custom-popup';
 
-  const speciesInput = document.createElement('input');
-  speciesInput.placeholder = 'Species';
-  speciesInput.value = data.species || '';
-  speciesInput.setAttribute('list', 'species-datalist');
-
-  const datalist = document.createElement('datalist');
-  datalist.id = 'species-datalist';
-  speciesList.forEach(sp => {
-    const opt = document.createElement('option');
-    opt.value = sp;
-    datalist.appendChild(opt);
-  });
-
-  const noteInput = document.createElement('textarea');
-  noteInput.placeholder = 'Note';
-  noteInput.value = data.note || '';
-
-  const saveBtn = document.createElement('button');
-  saveBtn.textContent = 'Save';
-
-  const deleteBtn = document.createElement('button');
-  deleteBtn.textContent = 'Delete';
-
-  container.append(speciesInput, datalist, noteInput, saveBtn, deleteBtn);
-  marker.bindPopup(container).openPopup();
-
-  saveBtn.onclick = () => {
-    const pt = {
-      lat: marker.getLatLng().lat,
-      lng: marker.getLatLng().lng,
-      species: speciesInput.value,
-      elcode: speciesCodeMap[speciesInput.value] || '',
-      note: noteInput.value,
-      datetime: new Date().toISOString()
-    };
-    const existing = JSON.parse(localStorage.getItem('speciesPoints') || '[]');
-    existing.push(pt);
-    localStorage.setItem('speciesPoints', JSON.stringify(existing));
-    map.closePopup();
-  };
-
-  deleteBtn.onclick = () => {
-    const lat = marker.getLatLng().lat;
-    const lng = marker.getLatLng().lng;
-    const updated = JSON.parse(localStorage.getItem('speciesPoints') || '[]').filter(p =>
-      Math.abs(p.lat - lat) > 0.00001 || Math.abs(p.lng - lng) > 0.00001
-    );
-    localStorage.setItem('speciesPoints', JSON.stringify(updated));
-    speciesLayer.removeLayer(marker);
-    map.closePopup();
-  };
-}
 
 function restoreSavedObservations(map) {
   const saved = JSON.parse(localStorage.getItem('speciesPoints') || '[]');
