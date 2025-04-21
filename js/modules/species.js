@@ -50,6 +50,9 @@ async function loadSpeciesList() {
 }
 
 function createSpeciesPopup(map, latlng, data = {}) {
+    console.log("🎯 Dropping species point at", latlng);
+    console.log("📦 speciesList:", speciesList);
+
     const marker = L.marker(latlng, { draggable: true }).addTo(speciesLayer);
     const container = document.createElement('div');
     container.className = 'custom-popup';
@@ -59,7 +62,7 @@ function createSpeciesPopup(map, latlng, data = {}) {
     speciesInput.value = data.species || '';
     speciesInput.setAttribute('list', 'species-datalist');
   
-    const datalist = document.createElement('datalist');
+    //const datalist = document.createElement('datalist');
     datalist.id = 'species-datalist';
     speciesList.forEach(sp => {
       const opt = document.createElement('option');
