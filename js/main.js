@@ -94,6 +94,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       timeout: 10000
     });
   }
+
+
 });
 
 // ─────────────────────────────────────
@@ -138,6 +140,27 @@ function setupCoreButtons() {
   const speciesDrawerBtn = document.getElementById("openSpeciesDrawerBtn");
   const speciesDrawer = document.getElementById("speciesPointsDrawer");
   const closeSpeciesDrawerBtn = document.getElementById("closeSpeciesPointsDrawer");
+  const attrBtn = document.getElementById("openUserAttributesBtn");
+  const attrDrawer = document.getElementById("userAttributesDrawer");
+  const closeAttr = document.getElementById("closeUserAttributesDrawer");
+
+if (attrBtn && attrDrawer) {
+  attrBtn.onclick = () => attrDrawer.classList.toggle("hidden");
+}
+if (closeAttr && attrDrawer) {
+  closeAttr.onclick = () => attrDrawer.classList.add("hidden");
+}
+
+// Tab switcher logic
+document.querySelectorAll('.tab-button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(tab).classList.remove('hidden');
+  });
+});
 
   if (speciesDrawerBtn && speciesDrawer) {
     speciesDrawerBtn.onclick = () => {

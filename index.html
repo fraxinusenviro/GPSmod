@@ -81,6 +81,11 @@
 <!-- Vertical Button Column - Top Left -->
 <div class="top-left-buttons">
 
+    <!-- Toggle User Point Attributes Drawer -->
+  <button id="openUserAttributesBtn" class="floating-btn" title="Edit Point Attributes">
+    <i class="fas fa-tags"></i>
+  </button>
+
   <!-- Floating button to place user point by GPS -->
   <button id="userPointGPSBtn" class="floating-btn" title="GPS Point">
     <i class="fas fa-crosshairs"></i>
@@ -208,64 +213,37 @@
 
 
 
-  <!-- ─────────────────────────────────────────────────────────────────────
-       Bottom Drawer: User Points Table + Export Options
-  ───────────────────────────────────────────────────────────────────── -->
-<!--   <div id="userPointsDrawer" class="bottom-drawer hidden">
-    <div class="drawer-header">
-      <button id="closeUserPointsDrawer" title="Close"><i class="fas fa-xmark"></i></button>
-      <h3>User Points</h3> -->
-
-      <!-- Export Buttons -->
-      <!-- <div class="export-buttons">
-        <button id="exportUserCSV" title="Export CSV"><i class="fas fa-file-csv"></i></button>
-        <button id="exportUserGeoJSON" title="Export GeoJSON"><i class="fas fa-file-code"></i></button>
-        <button id="syncUserS3" title="Sync to S3"><i class="fas fa-cloud-upload-alt"></i></button>
-      </div>
-    </div> -->
-
-    <!-- Table Rendered Dynamically -->
-    <!-- <div id="userPointsTableContainer"></div> -->
-
-    <!-- Console Log Output -->
-<!--     <div id="userConsole" class="console hidden">
-      <div id="userConsoleLog"></div>
-    </div>
-  </div> -->
-
-  <!-- ─────────────────────────────────────────────────────────────────────
-     Bottom Drawer: Species Observations Table + Export Options
+<!-- ─────────────────────────────────────────────────────────────────────
+     Bottom Drawer: User Point Attributes
 ───────────────────────────────────────────────────────────────────── -->
-<!-- <div id="speciesPointsDrawer" class="bottom-drawer hidden">
-  <div class="drawer-header">
-    <button id="closeSpeciesPointsDrawer" title="Close">
-      <i class="fas fa-xmark"></i>
-    </button>
-    <h3>Species Observations</h3> -->
-
-    <!-- Export Buttons -->
-    <!-- <div class="export-buttons">
-      <button id="exportSpeciesCSV" title="Export CSV">
-        <i class="fas fa-file-csv"></i>
-      </button>
-      <button id="exportSpeciesGeoJSON" title="Export GeoJSON">
-        <i class="fas fa-file-code"></i>
-      </button>
-      <button id="syncSpeciesS3" title="Sync to S3">
-        <i class="fas fa-cloud-upload-alt"></i>
-      </button>
-    </div>
+<div id="userAttributesDrawer" class="bottom-drawer hidden">
+  <div class="tab-header">
+    <button class="tab-button active" data-tab="attr-tab">Attribute Data</button>
+    <button class="tab-button" data-tab="symbology-tab">Point Symbology</button>
+    <button id="closeUserAttributesDrawer" title="Close"><i class="fas fa-xmark"></i></button>
   </div>
- -->
-  <!-- Table Rendered Dynamically -->
-  <!-- <div id="speciesPointsTableContainer"></div> -->
-
-  <!-- Console Log Output -->
- <!--  <div id="speciesConsole" class="console hidden">
-    <div id="speciesConsoleLog"></div>
+  <div class="tab-content" id="attr-tab">
+    <label>Type:
+      <select id="typeSelector">
+        <option value="Wetland">Wetland</option>
+        <option value="Watercourse">Watercourse</option>
+        <option value="Wildlife">Wildlife</option>
+        <option value="Species">Species Inventory</option>
+        <option value="Other">Other</option>
+      </select>
+    </label>
+    <label>Subtype:
+      <select id="subtypeSelector"><option>Loading...</option></select>
+    </label>
+    <label>Description:
+      <input type="text" id="descInput" placeholder="Enter description" />
+    </label>
+  </div>
+  <div class="tab-content hidden" id="symbology-tab">
+    <p>Placeholder: configure symbol, color, size, opacity, etc. (future)</p>
   </div>
 </div>
- -->
+
 
   <!-- ───────────────────────────────────────────────
      Top Drawer: Basemap Selector with Image Icons
