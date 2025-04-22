@@ -26,31 +26,6 @@
   </div>
 
   <!-- ─────────────────────────────────────────────────────────────────────
-       Subtitle Bar (Global Variables for New User Points)
-  ───────────────────────────────────────────────────────────────────── -->
-  <div id="subtitleBar" class="subtitle-bar">
-    <label>Type:
-      <select id="typeSelector">
-        <option value="Wetland">Wetland</option>
-        <option value="Watercourse">Watercourse</option>
-        <option value="Wildlife">Wildlife</option>
-        <option value="Species">Species Inventory</option>
-        <option value="Other">Other</option>
-      </select>
-    </label>
-
-    <label>Subtype:
-      <select id="subtypeSelector">
-        <option>Loading...</option>
-      </select>
-    </label>
-
-    <label>Description:
-      <input type="text" id="descInput" placeholder="Enter description" />
-    </label>
-  </div>
-
-  <!-- ─────────────────────────────────────────────────────────────────────
        Map + HUD Display
   ───────────────────────────────────────────────────────────────────── -->
   <div id="map"></div>
@@ -222,7 +197,7 @@
     <button class="tab-button" data-tab="symbology-tab">Point Symbology</button>
     <button id="closeUserAttributesDrawer" title="Close"><i class="fas fa-xmark"></i></button>
   </div>
-  <div class="tab-content" id="attr-tab">
+  <div class="tab-content stacked-fields" id="attr-tab">
     <label>Type:
       <select id="typeSelector">
         <option value="Wetland">Wetland</option>
@@ -232,9 +207,13 @@
         <option value="Other">Other</option>
       </select>
     </label>
+  
     <label>Subtype:
-      <select id="subtypeSelector"><option>Loading...</option></select>
+      <select id="subtypeSelector">
+        <option>Loading...</option>
+      </select>
     </label>
+  
     <label>Description:
       <input type="text" id="descInput" placeholder="Enter description" />
     </label>
