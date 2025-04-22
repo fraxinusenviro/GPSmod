@@ -317,3 +317,55 @@ input, select, button {
 .basemap-option:hover img {
   border-color: #007aff;
 }
+
+/* ─────────────────────────────────────
+  Bottom Drawer: Tabbed Data (POINTS)
+───────────────────────────────────── */
+.drawer-tabs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #333;
+  padding: 8px;
+  border-bottom: 1px solid #444;
+}
+
+.tab-btn {
+  flex: 1;
+  background: #444;
+  color: white;
+  padding: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tab-btn.active {
+  background: #1e90ff;
+}
+
+.tab-content.hidden {
+  display: none;
+}
+
+/* ─────────────────────────────────────
+  Bottom Drawer: Tracking Options & Data
+───────────────────────────────────── */
+
+.tracking-tab-content.hidden {
+  display: none;
+}
+
+.tracking-tab {
+  padding: 6px 12px;
+  background: #333;
+  color: white;
+  border: none;
+  margin-right: 4px;
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+}
+
+.tracking-tab.active {
+  background: #555;
+}

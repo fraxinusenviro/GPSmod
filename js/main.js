@@ -58,6 +58,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
     });
   }
+  setupTabbedDrawerUI(); //Tabbed Data Drawer UI
+  setupTrackingTabs(); //Tabbed Tracking Drawer UI
+
 
   // ─────────────────────────────────────
   // 4. Load Core Modules
@@ -132,6 +135,22 @@ function setupCoreButtons() {
   const consoleToggle = document.getElementById("toggleConsole");
   const drawerToggle = document.getElementById("drawerToggle");
   const userPointsDrawer = document.getElementById("userPointsDrawer");
+  const speciesDrawerBtn = document.getElementById("openSpeciesDrawerBtn");
+  const speciesDrawer = document.getElementById("speciesPointsDrawer");
+  const closeSpeciesDrawerBtn = document.getElementById("closeSpeciesPointsDrawer");
+
+  if (speciesDrawerBtn && speciesDrawer) {
+    speciesDrawerBtn.onclick = () => {
+      speciesDrawer.classList.toggle("hidden");
+    };
+  }
+
+  if (closeSpeciesDrawerBtn && speciesDrawer) {
+    closeSpeciesDrawerBtn.onclick = () => {
+      speciesDrawer.classList.add("hidden");
+    };
+  }
+
 
   if (userPointsDrawer) userPointsDrawer.classList.add("hidden");
 
@@ -172,9 +191,11 @@ function setupCoreButtons() {
 
   if (drawerToggle) {
     drawerToggle.onclick = () => {
-      document.getElementById("trackingDrawer")?.classList.toggle("closed");
+      const drawer = document.getElementById("trackingDrawer");
+      if (drawer) drawer.classList.toggle("hidden");
     };
   }
+  
 }
 
 // ─────────────────────────────────────
@@ -234,4 +255,63 @@ function setupPointTypeInputs() {
   });
 
   loadSubtypes(typeSelect.value);
+}
+
+// ─────────────────────────────────────
+// Set up tabbed data drawer UI (USER POINTS & SPECIES OBS)
+// ─────────────────────────────────────
+function setupTabbedDrawerUI() {
+  const drawer = document.getElementById("dataTabsDrawer");
+  const openBtn = document.getElementById("openDataTabsDrawerBtn");
+  const closeBtn = document.getElementById("closeDataTabsDrawer");
+
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const tabContents = document.querySelectorAll(".tab-content");
+
+  if (openBtn && drawer) {
+    openBtn.onclick = () => drawer.classList.remove("hidden");
+  }
+
+  if (closeBtn && drawer) {
+    closeBtn.onclick = () => drawer.classList.add("hidden");
+  }
+
+  tabButtons.forEach(btn => {
+    btn.onclick = () => {
+      tabButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const target = btn.dataset.tab;
+      tabContents.forEach(c => c.classList.add("hidden"));
+      document.getElementById(target).classList.remove("hidden");
+    };
+  });
+}
+
+// ─────────────────────────────────────
+// Set up tabbed TRACKING DRAWER
+// ─────────────────────────────────────
+function setupTrackingTabs() {
+  const tabs = document.querySelectorAll(".tracking-tab");
+  const panels = document.querySelectorAll(".tracking-tab-content");
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      // Remove active class from all tabs and hide all panels
+      tabs.forEach(t => t.classList.remove("active"));
+      panels.forEach(p => p.classList.add("hidden"));
+
+      // Activate the clicked tab and show its corresponding panel
+      tab.classList.add("active");
+      const targetId = tab.dataset.tab;
+      document.getElementById(targetId)?.classList.remove("hidden");
+    });
+  });
+
+  // Optional: Set the first tab as default open
+  if (tabs.length > 0) {
+    tabs[0].classList.add("active");
+    const firstTabId = tabs[0].dataset.tab;
+    document.getElementById(firstTabId)?.classList.remove("hidden");
+  }
 }

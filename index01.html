@@ -61,18 +61,12 @@
   ───────────────────────────────────────────────────────────────────── -->
 <!-- Horizontal Button Row - Top Right -->
 <div class="top-right-buttons">
-  
-  <!-- Basemap Switcher -->
   <button id="basemapToggleBtn" class="floating-btn" title="Switch Basemap">
     <i class="fas fa-layer-group"></i>
   </button>
-  
-  <!-- Start/Stop Tracking -->
   <button id="startStopBtn" class="floating-btn" title="Start/Stop Tracking">
     <i class="fas fa-play"></i>
   </button>
-
-  <!-- Floating Button to Open the Tracking Drawer -->
   <button id="drawerToggle" class="floating-btn" title="Toggle Drawer">
     <i class="fas fa-sliders-h"></i>
   </button>
@@ -80,192 +74,81 @@
 
 <!-- Vertical Button Column - Top Left -->
 <div class="top-left-buttons">
-
-  <!-- Floating button to place user point by GPS -->
   <button id="userPointGPSBtn" class="floating-btn" title="GPS Point">
     <i class="fas fa-crosshairs"></i>
   </button>
-
-  <!-- Floating button to place user point MANUALLY -->
   <button id="userPointManualBtn" class="floating-btn" title="Manual Point">
     <i class="fas fa-map-marker-alt"></i>
   </button>
-
-  <!-- Floating button for species observation by GPS-->
-  <button id="speciesObsBtn" class="floating-btn" title="Add Species Observation">
-  <i class="fas fa-dove"></i>
-  </button>
-
-  <!-- Floating Button to Open Tabbed Data Drawer -->
-  <button id="openDataTabsDrawerBtn" class="floating-btn" title="Open Data Table">
+  <button id="dataLibraryBtn" class="floating-btn" title="Point Library">
     <i class="fas fa-table-list"></i>
   </button>
 
+  <!-- Floating button for species observation -->
+  <button id="speciesObsBtn" class="floating-btn" title="Add Species Observation">
+  <i class="fas fa-dove"></i>
+</button>
 </div>
 
+  <!-- ─────────────────────────────────────────────────────────────────────
+       Side Drawer: Tracking Options
+  ───────────────────────────────────────────────────────────────────── -->
+  <div class="drawer closed" id="trackingDrawer">
+    <h3>GPS Tracker</h3>
+    <label><input type="checkbox" id="enablePoints" checked />Points</label>
+    <label><input type="checkbox" id="enableLine" checked />Line</label>
+    <label><input type="checkbox" id="enablePolygon" />Polygon</label>
 
-<!-- ─────────────────────────────────────────────────────────────────────
-     Bottom Drawer: GPS Tracking Tabs (Geometry, Stats, Points, Lines, Polygons)
-───────────────────────────────────────────────────────────────────── -->
-<div id="trackingDrawer" class="bottom-drawer hidden">
-  <!-- Tab Navigation -->
-  <div class="drawer-header">
-    <div class="tracking-tab-bar">
-      <button class="tracking-tab" data-tab="tab-geometry">Geometry</button>
-      <button class="tracking-tab" data-tab="tab-stats">Stats</button>
-      <button class="tracking-tab" data-tab="tab-points">Track Points</button>
-      <button class="tracking-tab" data-tab="tab-lines">Track Lines</button>
-      <button class="tracking-tab" data-tab="tab-polygons">Track Polygons</button>
-    </div>
-    <button id="closeTrackingDrawer" title="Close"><i class="fas fa-xmark"></i></button>
-  </div>
-
-  <!-- Tab Panels -->
-  <div class="tracking-tab-content hidden" id="tab-geometry">
-    <label><input type="checkbox" id="enablePoints" checked /> Points</label><br>
-    <label><input type="checkbox" id="enableLine" checked /> Line</label><br>
-    <label><input type="checkbox" id="enablePolygon" /> Polygon</label><br><br>
-
-    <label>Collection Mode:</label>
     <select id="captureMode">
       <option value="distance">Min Distance</option>
       <option value="time">Min Time</option>
     </select>
     <input type="number" id="captureParam" value="10" />
     <input type="text" id="pointLabel" placeholder="Point Label" />
-  </div>
 
-  <div class="tracking-tab-content hidden" id="tab-stats">
-    <p>Time: <span id="elapsedTime">0s</span></p>
-    <p>Distance: <span id="totalDistance">0.0</span> m</p>
-    <p>Area: <span id="totalArea">0.0</span> m²</p>
-    <p>Points: <span id="pointCount">0</span></p>
-    <p>Line Vertices: <span id="lineVertices">0</span></p>
-    <p>Polygon Vertices: <span id="polygonVertices">0</span></p>
-    <p>Accuracy (min): <span id="minAccuracy">—</span></p>
-    <p>Accuracy (max): <span id="maxAccuracy">—</span></p>
+    <button id="exportPoints">Export Points</button>
+    <button id="exportLine">Export Line</button>
+    <button id="exportPolygon">Export Polygon</button>
 
     <button id="resetStats">Reset Stats</button>
     <button id="clearAll">Clear All</button>
-  </div>
 
-  <div class="tracking-tab-content hidden" id="tab-points">
-    <h4>Track Points</h4>
-    <div id="trackPointsTableContainer"></div>
-    <button id="exportTrackPoints">Export Points (GeoJSON)</button>
-  </div>
-
-  <div class="tracking-tab-content hidden" id="tab-lines">
-    <h4>Track Lines</h4>
-    <div id="trackLinesTableContainer"></div>
-    <button id="exportTrackLines">Export Lines (GeoJSON)</button>
-  </div>
-
-  <div class="tracking-tab-content hidden" id="tab-polygons">
-    <h4>Track Polygons</h4>
-    <div id="trackPolygonsTableContainer"></div>
-    <button id="exportTrackPolygons">Export Polygons (GeoJSON)</button>
-  </div>
-</div>
-
-  <!-- ──────────────────────────────────────────────────────────────
-      Bottom Drawer: Tabbed Viewer for User Points & Species Data
-  ────────────────────────────────────────────────────────────── -->
-  <div id="dataTabsDrawer" class="bottom-drawer hidden">
-
-    <!-- Tab Switcher -->
-    <div class="drawer-tabs">
-      <button class="tab-btn active" data-tab="userTab">User Points</button>
-      <button class="tab-btn" data-tab="speciesTab">Species Observations</button>
-      <button id="closeDataTabsDrawer" title="Close"><i class="fas fa-xmark"></i></button>
-    </div>
-
-    <!-- User Points Tab -->
-    <div id="userTab" class="tab-content">
-      <div class="drawer-header">
-        <h3>User Points</h3>
-        <div class="export-buttons">
-          <button id="exportUserCSV" title="Export CSV"><i class="fas fa-file-csv"></i></button>
-          <button id="exportUserGeoJSON" title="Export GeoJSON"><i class="fas fa-file-code"></i></button>
-          <button id="syncUserS3" title="Sync to S3"><i class="fas fa-cloud-upload-alt"></i></button>
-        </div>
-      </div>
-      <div id="userPointsTableContainer"></div>
-    </div>
-
-    <!-- Species Tab -->
-    <div id="speciesTab" class="tab-content hidden">
-      <div class="drawer-header">
-        <h3>Species Observations</h3>
-        <div class="export-buttons">
-          <button id="exportSpeciesCSV" title="Export CSV"><i class="fas fa-file-csv"></i></button>
-          <button id="exportSpeciesGeoJSON" title="Export GeoJSON"><i class="fas fa-file-code"></i></button>
-        </div>
-      </div>
-      <div id="speciesPointsTableContainer"></div>
+    <div id="stats">
+      <p>Time: <span id="elapsedTime">0s</span></p>
+      <p>Distance: <span id="totalDistance">0.0</span> m</p>
+      <p>Area: <span id="totalArea">0.0</span> m²</p>
+      <p>Points: <span id="pointCount">0</span></p>
+      <p>Vertices (Line): <span id="lineVertices">0</span></p>
+      <p>Vertices (Polygon): <span id="polygonVertices">0</span></p>
+      <p>Accuracy (min): <span id="minAccuracy">—</span></p>
+      <p>Accuracy (max): <span id="maxAccuracy">—</span></p>
     </div>
   </div>
-
-
 
   <!-- ─────────────────────────────────────────────────────────────────────
        Bottom Drawer: User Points Table + Export Options
   ───────────────────────────────────────────────────────────────────── -->
-<!--   <div id="userPointsDrawer" class="bottom-drawer hidden">
+  <div id="userPointsDrawer" class="bottom-drawer hidden">
     <div class="drawer-header">
       <button id="closeUserPointsDrawer" title="Close"><i class="fas fa-xmark"></i></button>
-      <h3>User Points</h3> -->
+      <h3>User Points</h3>
 
       <!-- Export Buttons -->
-      <!-- <div class="export-buttons">
+      <div class="export-buttons">
         <button id="exportUserCSV" title="Export CSV"><i class="fas fa-file-csv"></i></button>
         <button id="exportUserGeoJSON" title="Export GeoJSON"><i class="fas fa-file-code"></i></button>
         <button id="syncUserS3" title="Sync to S3"><i class="fas fa-cloud-upload-alt"></i></button>
       </div>
-    </div> -->
+    </div>
 
     <!-- Table Rendered Dynamically -->
-    <!-- <div id="userPointsTableContainer"></div> -->
+    <div id="userPointsTableContainer"></div>
 
     <!-- Console Log Output -->
-<!--     <div id="userConsole" class="console hidden">
+    <div id="userConsole" class="console hidden">
       <div id="userConsoleLog"></div>
     </div>
-  </div> -->
-
-  <!-- ─────────────────────────────────────────────────────────────────────
-     Bottom Drawer: Species Observations Table + Export Options
-───────────────────────────────────────────────────────────────────── -->
-<!-- <div id="speciesPointsDrawer" class="bottom-drawer hidden">
-  <div class="drawer-header">
-    <button id="closeSpeciesPointsDrawer" title="Close">
-      <i class="fas fa-xmark"></i>
-    </button>
-    <h3>Species Observations</h3> -->
-
-    <!-- Export Buttons -->
-    <!-- <div class="export-buttons">
-      <button id="exportSpeciesCSV" title="Export CSV">
-        <i class="fas fa-file-csv"></i>
-      </button>
-      <button id="exportSpeciesGeoJSON" title="Export GeoJSON">
-        <i class="fas fa-file-code"></i>
-      </button>
-      <button id="syncSpeciesS3" title="Sync to S3">
-        <i class="fas fa-cloud-upload-alt"></i>
-      </button>
-    </div>
   </div>
- -->
-  <!-- Table Rendered Dynamically -->
-  <!-- <div id="speciesPointsTableContainer"></div> -->
-
-  <!-- Console Log Output -->
- <!--  <div id="speciesConsole" class="console hidden">
-    <div id="speciesConsoleLog"></div>
-  </div>
-</div>
- -->
 
   <!-- ───────────────────────────────────────────────
      Top Drawer: Basemap Selector with Image Icons
